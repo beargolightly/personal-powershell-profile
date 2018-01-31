@@ -2,6 +2,10 @@ $script_library = "C:\ps_profile_scripts\" # path ending with \
 $env:path += ";C:\Program Files (x86)\Microsoft VS Code"
 $modules = "posh-git","psake","pester","POSH-Tips"
 
+$mymodules = $script_library + "modules\"
+
+$env:PSModulePath = $env:PSModulePath + ";" + $mymodules
+
 # disable terminal bells and beeps
 Set-PSReadlineOption -BellStyle None -MaximumHistoryCount 1000
 
@@ -32,3 +36,4 @@ function editprofile {
 }
 
 new-alias psake Invoke-psake
+
