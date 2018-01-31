@@ -1,6 +1,6 @@
 $script_library = "C:\ps_profile_scripts\" # path ending with \
 $env:path += ";C:\Program Files (x86)\Microsoft VS Code"
-$modules = "posh-git","psake","pester"
+$modules = "posh-git","psake","pester","POSH-Tips"
 
 # disable terminal bells and beeps
 Set-PSReadlineOption -BellStyle None -MaximumHistoryCount 1000
@@ -23,6 +23,12 @@ function changelog {
   git log "$t...HEAD" --oneline
 }
 
-function newwin {
-  Invoke-Item C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe
+function edittips {
+  code C:\code\POSH-Tips\POSHTips.json
 }
+
+function editprofile {
+  code C:\code\personal-powershell-profile
+}
+
+new-alias psake Invoke-psake
