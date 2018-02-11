@@ -1,39 +1,26 @@
-$script_library = "C:\ps_profile_scripts\" # path ending with \
+$MyProfilePath = "C:\psprofile\"
+$ScriptLibrary = $MyProfilePath + "scripts\"
+
+$ModulesLibrary = $profile_main + "modules\" # publish modules-in-development to here so they can be loaded automatically
+$env:PSModulePath = $env:PSModulePath + ";" + $ModulesLibrary
+
+$ModulesToImport = "posh-git","psake","pester"
+
 $env:path += ";C:\Program Files (x86)\Microsoft VS Code"
-$modules = "posh-git","psake","pester"
 
-$mymodules = $script_library + "modules\"
-
-$env:PSModulePath = $env:PSModulePath + ";" + $mymodules
-
-# disable terminal bells and beeps
-Set-PSReadlineOption -BellStyle None -MaximumHistoryCount 1000
-
+Set-PSReadlineOption -BellStyle None -MaximumHistoryCount 1000 # disable console beeps and such
 
 # load named modules, if they exist, and show a version table
-foreach ($module in $modules) {
+foreach ($module in $ModulesToImport) {
   if (Get-Module -listavailable -name $module) {
+    $percentComplete = ([int]$ModulesToImport.IndexOf($module)/$ModulesToImport.Length) * 100
+    Write-Progress -Activity 'Loading Modules' -Status "Loading $($module)" -PercentComplete $percentComplete
     Import-Module $module
-    # Write-Host "Loaded $($module) v$((get-module $module).version)"
   }  
 }
-Get-Module $modules | Format-Table name, version
+Get-Module $ModulesToImport | Format-Table name, version
+Write-Progress -Activity 'Loading Modules' -Completed
 
-Get-ChildItem ($script_library + "*.ps1") | 
-  ForEach-Object { . (Join-Path $script_library $_.Name)}
-
-function changelog {
-  $t = git describe --tags --abbrev=0
-  git log "$t...HEAD" --oneline
-}
-
-function edittips {
-  code C:\code\POSH-Tips\POSHTips.json
-}
-
-function editprofile {
-  code C:\code\personal-powershell-profile
-}
-
-new-alias psake Invoke-psake
+Get-ChildItem ($ScriptLibrary + "*.ps1") | 
+  ForEach-Object { . (Join-Path $ScriptLibrary $_.Name)}  # dot-source all the .ps1 scripts in $ScriptLibrary, in no particular order
 
