@@ -1,6 +1,6 @@
 $script_library = "C:\ps_profile_scripts\" # path ending with \
 $env:path += ";C:\Program Files (x86)\Microsoft VS Code"
-$modules = "posh-git","psake","pester","POSH-Tips"
+$modules = "posh-git","psake","pester"
 
 $mymodules = $script_library + "modules\"
 
